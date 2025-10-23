@@ -262,83 +262,102 @@ function ChatRoom({ roomKey, username, onLeave }) {
   return (
     <div className="h-screen flex flex-col">
       {/* Header */}
-      <header className="glass-dark border-b border-white/10 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-lg">
-            <span className="text-sm text-gray-400">Room:</span>
-            <span className="font-mono font-semibold">{roomKey}</span>
+      <header className="glass-dark border-b border-white/10 px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+        <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
+          <div className="flex items-center gap-1 sm:gap-2 bg-white/5 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg min-w-0">
+            <span className="text-xs sm:text-sm text-gray-400 hidden sm:inline">Room:</span>
+            <span className="font-mono font-semibold text-xs sm:text-base truncate">{roomKey}</span>
             <button
               onClick={handleCopyKey}
-              className="ml-2 p-1 hover:bg-white/10 rounded transition-colors"
+              className="ml-1 sm:ml-2 p-1 hover:bg-white/10 rounded transition-colors flex-shrink-0"
               title="Copy room key"
             >
               {copied ? (
-                <Check className="w-4 h-4 text-green-400" />
+                <Check className="w-3 h-3 sm:w-4 sm:h-4 text-green-400" />
               ) : (
-                <Copy className="w-4 h-4 text-gray-400" />
+                <Copy className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
               )}
             </button>
           </div>
           
           {isAdmin && (
-            <div className="flex items-center gap-2 bg-yellow-500/10 px-3 py-1 rounded-lg border border-yellow-500/20">
+            <div className="hidden sm:flex items-center gap-2 bg-yellow-500/10 px-3 py-1 rounded-lg border border-yellow-500/20">
               <Crown className="w-4 h-4 text-yellow-400" />
               <span className="text-xs font-medium text-yellow-400">Admin</span>
             </div>
           )}
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
           <button
             onClick={() => setShowUserList(!showUserList)}
             className="md:hidden p-2 hover:bg-white/10 rounded-lg transition-colors"
+            title="Toggle users"
           >
-            <UsersIcon className="w-5 h-5" />
+            <UsersIcon className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
           
           {isAdmin && (
             <button
               onClick={handleDeleteRoom}
-              className="flex items-center gap-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg transition-colors border border-red-500/20"
+              className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg transition-colors border border-red-500/20"
               title="Delete room"
             >
-              <Trash2 className="w-4 h-4" />
-              <span className="hidden sm:inline">Delete Room</span>
+              <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline text-sm">Delete</span>
             </button>
           )}
           
           <button
             onClick={handleLeave}
-            className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
+            className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
           >
-            <LogOut className="w-4 h-4" />
-            <span className="hidden sm:inline">Leave</span>
+            <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline text-sm">Leave</span>
           </button>
         </div>
       </header>
 
       {/* Error banner */}
       {socketError && (
-        <div className="bg-red-500/10 border-b border-red-500/20 px-6 py-3 flex items-center gap-3">
-          <AlertCircle className="w-5 h-5 text-red-400" />
-          <span className="text-sm text-red-400">{socketError}</span>
+        <div className="bg-red-500/10 border-b border-red-500/20 px-3 sm:px-6 py-2 sm:py-3 flex items-center gap-2 sm:gap-3">
+          <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-400 flex-shrink-0" />
+          <span className="text-xs sm:text-sm text-red-400">{socketError}</span>
         </div>
       )}
 
       {/* Main content */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* User list sidebar */}
-        <aside className={`${showUserList ? 'flex' : 'hidden'} md:flex flex-col w-64 glass-dark border-r border-white/10 p-4`}>
-          <div className="flex items-center gap-2 mb-4">
-            <UsersIcon className="w-5 h-5 text-blue-400" />
-            <h3 className="font-semibold">Users ({users.length}/10)</h3>
+      <div className="flex-1 flex overflow-hidden relative">
+        {/* User list sidebar - Mobile: Overlay, Desktop: Static */}
+        <aside className={`
+          ${showUserList ? 'flex' : 'hidden'} 
+          md:flex flex-col 
+          w-64 sm:w-72 md:w-64 
+          glass-dark border-r border-white/10 
+          p-3 sm:p-4 
+          absolute md:relative 
+          top-0 left-0 bottom-0 
+          z-30 md:z-auto
+          shadow-2xl md:shadow-none
+        `}>
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
+            <div className="flex items-center gap-2">
+              <UsersIcon className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
+              <h3 className="font-semibold text-sm sm:text-base">Users ({users.length}/10)</h3>
+            </div>
+            <button
+              onClick={() => setShowUserList(false)}
+              className="md:hidden p-1.5 hover:bg-white/10 rounded-lg transition-colors"
+            >
+              <span className="text-lg">×</span>
+            </button>
           </div>
           
           <div className="space-y-2 flex-1 overflow-y-auto scrollbar-thin">
             {users.map((user) => (
               <div
                 key={user.socketId}
-                className="flex items-center justify-between p-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors group"
+                className="flex items-center justify-between p-2.5 sm:p-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors group"
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
@@ -370,11 +389,19 @@ function ChatRoom({ roomKey, username, onLeave }) {
           </div>
         </aside>
 
+        {/* Overlay backdrop for mobile sidebar */}
+        {showUserList && (
+          <div 
+            className="md:hidden fixed inset-0 bg-black/50 z-20"
+            onClick={() => setShowUserList(false)}
+          />
+        )}
+
         {/* Chat area */}
-        <main className="flex-1 flex flex-col">
+        <main className="flex-1 flex flex-col min-w-0">
           {/* Messages */}
           <div 
-            className="flex-1 overflow-y-auto p-6 space-y-4 scrollbar-thin"
+            className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4 scrollbar-thin"
             style={{
               backgroundImage: `linear-gradient(rgba(17, 24, 39, 0.85), rgba(17, 24, 39, 0.85)), url(${background})`,
               backgroundSize: 'cover',
@@ -385,30 +412,30 @@ function ChatRoom({ roomKey, username, onLeave }) {
             {messages.map((msg) => (
               <div
                 key={msg.id}
-                className={`flex ${msg.isSystem ? 'justify-center' : msg.isOwn ? 'justify-end' : 'justify-start'}`}
+                className={`flex ${msg.isSystem ? 'justify-center' : msg.isOwn ? 'justify-end' : 'justify-start'} px-1`}
               >
                 {msg.isSystem ? (
-                  <div className="bg-white/5 backdrop-blur-sm px-4 py-2 rounded-full text-sm text-gray-400">
+                  <div className="bg-white/5 backdrop-blur-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm text-gray-400">
                     {msg.text}
                   </div>
                 ) : (
-                  <div className={`max-w-md ${msg.isOwn ? 'items-end' : 'items-start'} flex flex-col`}>
-                    <div className="flex items-center gap-2 mb-1 px-1">
-                      <span className="text-xs font-medium text-gray-400">
+                  <div className={`max-w-[85%] sm:max-w-md ${msg.isOwn ? 'items-end' : 'items-start'} flex flex-col`}>
+                    <div className="flex items-center gap-1.5 sm:gap-2 mb-1 px-1">
+                      <span className="text-xs font-medium text-gray-400 truncate">
                         {msg.username}
                       </span>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-[10px] sm:text-xs text-gray-500">
                         {formatTime(msg.timestamp)}
                       </span>
                     </div>
                     <div
-                      className={`px-4 py-3 rounded-2xl ${
+                      className={`px-3 sm:px-4 py-2 sm:py-3 rounded-2xl ${
                         msg.isOwn
                           ? 'bg-blue-500 text-white rounded-br-md'
                           : 'bg-white/10 backdrop-blur-md text-white rounded-bl-md'
                       }`}
                     >
-                      <p className="text-sm break-words">{msg.text}</p>
+                      <p className="text-sm sm:text-base break-words">{msg.text}</p>
                     </div>
                   </div>
                 )}
@@ -420,14 +447,14 @@ function ChatRoom({ roomKey, username, onLeave }) {
 
           {/* Typing indicator */}
           {typingUsers.size > 0 && (
-            <div className="px-6 py-2 text-sm text-gray-400 italic">
+            <div className="px-3 sm:px-6 py-2 text-xs sm:text-sm text-gray-400 italic">
               {getTypingText()}...
             </div>
           )}
 
           {/* Message input */}
-          <div className="glass-dark border-t border-white/10 p-4">
-            <form onSubmit={handleSendMessage} className="flex gap-3">
+          <div className="glass-dark border-t border-white/10 p-2.5 sm:p-3 md:p-4 safe-bottom">
+            <form onSubmit={handleSendMessage} className="flex gap-2 sm:gap-3">
               <input
                 type="text"
                 value={inputMessage}
@@ -437,15 +464,15 @@ function ChatRoom({ roomKey, username, onLeave }) {
                 }}
                 onBlur={handleStopTyping}
                 placeholder="Type your message..."
-                className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="flex-1 px-3 sm:px-4 py-2.5 sm:py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm sm:text-base"
                 maxLength={500}
               />
               <button
                 type="submit"
                 disabled={!inputMessage.trim()}
-                className="px-6 py-3 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-xl transition-colors flex items-center gap-2 font-semibold"
+                className="px-3 sm:px-6 py-2.5 sm:py-3 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-xl transition-colors flex items-center gap-1.5 sm:gap-2 font-semibold text-sm sm:text-base"
               >
-                <Send className="w-5 h-5" />
+                <Send className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span className="hidden sm:inline">Send</span>
               </button>
             </form>

@@ -3,9 +3,24 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
   body {
     @apply bg-gray-900 text-white antialiased;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    overscroll-behavior: none;
+  }
+  
+  /* Prevent zoom on input focus for iOS */
+  input, textarea, select {
+    font-size: 16px;
+  }
+  
+  /* Better mobile scrolling */
+  * {
+    -webkit-overflow-scrolling: touch;
   }
 }
 
@@ -34,6 +49,15 @@
   
   .glass-dark {
     @apply bg-black/20 backdrop-blur-md border border-white/10;
+  }
+  
+  /* Safe area for mobile devices (notch/home indicator) */
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
   }
 }
 
